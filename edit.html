@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+</head>
+<body>
+<script>
+    "use strict";
+    var arr = [];
+    //console.log(arr);
+    const funSave=()=>{
+        let name = document.getElementById('name').value;
+        let classname = document.getElementById('class').value;
+        let gender;
+        if(document.getElementById('male').checked){
+            gender = document.getElementById('male').value;
+        }else if(document.getElementById('female').checked){
+            gender = document.getElementById('female').value;
+        }else{
+            alert('please choose gender');
+        }
+        let count = document.getElementById('cntry').value;
+        let state = document.getElementById('state').value;
+        let id=0;
+        if(arr.length === 0){
+            id = 1
+            arr.push({id:1,name:name,gender:gender,class:classname,country:count,state:state});
+        }else{
+            id = arr.length + 1
+            arr.push({id:id,name:name,gender:gender,class:classname,country:count,state:state});
+        }
+        console.log("arr",arr);
+        let table = document.getElementById('table');
+        ///for(let key of arr){
+            const tr = document.createElement('tr');
+            const content = `<td>${name}</td>
+                             <td>${classname}</td>
+                             <td>${gender}</td>
+                             <td>${count}</td>
+                             <td>${state}</td>
+                             <td>
+                                <button type="button" onclick=funDel(${id})>Delete</button>
+                                <button type="button" onclick=funEdit(${id})>Edit</button>
+                             </td>`;
+            tr.innerHTML = content;
+            table.appendChild(tr);
+        ///}
+    }
+    const funDel=(id)=>{
+        //let table = document.getElementById('table')
+        var index = arr.findIndex((o)=>{
+            return o.id === id
+        });
+        //console.log('****',index);
+        if (index !== 1){
+            arr.splice(index,1);
+        }
+        console.log(arr);
+        let table = document.getElementById('table');
+        table.deleteRow(1)
+    }
+    const funEdit=(id)=>{
+        var index = arr.findIndex((o)=>{
+            return o.id === id
+        });
+        //console.log('****',arr[index]);
+        //console.log(arr[index].state);
+        document.getElementById('name').value = arr[index].name;
+        document.getElementById('class').value = arr[index].class;
+        if(document.getElementById('male').checked!=null){
+            document.getElementById('male').checked = arr[index].gender;
+        }else if(document.getElementById('female').checked!=null){
+            document.getElementById('female').checked = arr[index].gender;
+        }else{
+            return false;
+        }
+        document.getElementById('cntry').value = arr[index].country;
+        document.getElementById('state').value = arr[index].state;
+        document.getElementById('update_id').value = arr[index].id;
+    }
+    const funUpdate=(id)=>{
+        var id = document.getElementById('update_id').value;
+        //console.log(id);
+        var index = arr.findIndex((o)=>{
+            return o.id === id
+        });
+        //console.log(arr);
+        //arr.splice(0,1);
+        table.deleteRow(index);
+        arr.forEach((val,index)=>{
+            if(val.id == id){
+                arr[index].name = document.getElementById('name').value;
+                //console.log('/////////',arr[index]);
+                arr[index].class = document.getElementById('class').value;
+                //arr[index].gender = document.getElementById('male').value;
+                if(document.getElementById('male').checked==true){
+                    arr[index].gender = document.getElementById('male').value;
+                }else if(document.getElementById('female').checked == true){
+                    arr[index].gender = document.getElementById('female').value;
+                }else{
+                    return false;
+                }
+                arr[index].country = document.getElementById('cntry').value;
+                arr[index].state = document.getElementById('state').value;
+                //arr = [{name:arr[index].name,class:arr[index].class,country:arr[index].country,gender:arr[index].gender,state:arr[index].state}];
+                //console.log('/////////',arr[index]);
+                var table = document.getElementById('table');
+                var tr = document.createElement('tr');
+                const content = `<td>${arr[index].name}</td>
+                                 <td>${arr[index].class}</td>
+                                 <td>${arr[index].gender}</td>
+                                 <td>${arr[index].country}</td>
+                                 <td>${arr[index].state}</td>
+                                 <td>
+                                    <button type="button" onclick=funDel(${id})>Delete</button>
+                                    <button type="button" onclick=funEdit(${id})>Edit</button>
+                                 </td>`;
+                tr.innerHTML= content;
+                table.appendChild(tr);
+            }
+        });
+    }
+    const funReset=()=>{
+        document.getElementById('name').value = "";
+        document.getElementById('class').value = "";
+        document.getElementById('male').checked = false;
+        document.getElementById('female').checked = false;
+        document.getElementById('cntry').value = "";
+        document.getElementById('state').value = "";
+    }
+    //console.log("define array",arr);
+</script>
+<form >
+    <label for="name">Name</label>
+    <input type="text" name="name" value="" id="name"></br></br>
+    <label>Class</label>
+    <input type="text" name="class" value="" id="class"></br></br>
+    Gender:<input type="radio" name="gender" id="male" value="male">Male
+    <input type="radio" name="gender" id="female" value="female">Female</br>
+    <label>Country</label>
+    <input type="text" value="" id="cntry"></br></br>
+    <label>State</label>
+    <select name="" id="state">
+      <option value="madhya pradesh">Madhya Pradesh</option>
+      <option value="delhi">Delhi</option>
+      <option value="gujrat">Gujrat</option>
+      <option value="punjab">Punjab</option>
+    </select></br></br>
+    <button type="button" onclick="funSave(table)">Save</button>
+    <button type="button" onclick="funReset()">Reset</button>
+    <button type="button" id="update_id" onclick="funUpdate(`${id}`)">Update</button>
+</form></br></br>
+<table border="1px" id="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Class</th>
+                <th>Gender</th>
+                <th>Country</th>
+                <th>State</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="myrow">
+            </tr>
+        </tbody>
+</table>
+</body>
+</html>
